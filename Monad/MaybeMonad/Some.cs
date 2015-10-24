@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Monad.Maybe
+namespace Monad.MaybeMonad
 {
-    public sealed class SomeResult<T> : MaybeResult<T>
+    public sealed class Some<T> : Maybe<T>
     {
+
         /// <summary>
         /// Returns Some value
         /// </summary>
@@ -19,12 +20,22 @@ namespace Monad.Maybe
         public override bool HasValue { get { return true; } }
 
         /// <summary>
-        /// Constructs Maybe from value
+        /// Constructs MaybeLazy from value
         /// </summary>
         /// <param name="value">The value to convert.</param>
-        public SomeResult(T value)
+        public static Some<T> Of(T value)
+        {
+            return new Some<T>(value);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Some(T value)
         {
             Value = value;
         } 
     }
+
+
 }

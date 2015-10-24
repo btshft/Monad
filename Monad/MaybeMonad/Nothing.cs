@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Monad.Maybe
+namespace Monad.MaybeMonad
 {
     /// <summary>
-    /// Nothing  case of Maybe<T> monad
+    /// Nothing  case of MaybeLazy<T> monad
     /// </summary>
-    public sealed class NothingResult<T> : MaybeResult<T>
+    public sealed class Nothing<T> : Maybe<T>
     {
-        internal static MaybeResult<T> Default = new NothingResult<T>();
+        internal static Maybe<T> Default = new Nothing<T>();
 
         /// <summary>
         /// Monad value 
@@ -23,7 +23,7 @@ namespace Monad.Maybe
         {
             get
             {
-                throw new InvalidOperationException("Maybe<" + nameof(T) + ">.Nothing has no value.");
+                throw new InvalidOperationException("MaybeLazy<" + nameof(T) + ">.Nothing has no value.");
             }
         }
 
