@@ -41,6 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Maybe\Maybe.cs" />
+    <Compile Include="Maybe\MaybeResult.cs" />
+    <Compile Include="Maybe\NothingResult.cs" />
+    <Compile Include="Maybe\SomeResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
