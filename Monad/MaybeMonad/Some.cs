@@ -8,16 +8,18 @@ namespace Monad.MaybeMonad
 {
     public sealed class Some<T> : Maybe<T>
     {
-
         /// <summary>
         /// Returns Some value
         /// </summary>
-        public override T    Value    { get; }
+        public override T Value { get; }
 
         /// <summary>
         /// Some always have a value
         /// </summary>
-        public override bool HasValue { get { return true; } }
+        public override bool HasValue
+        {
+            get { return true; }
+        }
 
         /// <summary>
         /// Constructs MaybeLazy from value
@@ -34,8 +36,6 @@ namespace Monad.MaybeMonad
         private Some(T value)
         {
             Value = value;
-        } 
+        }
     }
-
-
 }

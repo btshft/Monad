@@ -14,8 +14,8 @@ namespace Monad.MaybeMonad
         public static Maybe<T> ToMaybe<T>(this T self)
         {
             return self == null
-                    ? Nothing<T>.Default
-                    : Some<T>.Of(self);
+                ? Nothing<T>.Default
+                : Some<T>.Of(self);
         }
 
         /// <summary>
@@ -25,24 +25,24 @@ namespace Monad.MaybeMonad
         public static IEnumerable<T> Flatten<T>(this IEnumerable<Maybe<T>> source)
         {
             return from maybe in source
-                   where maybe.HasValue
-                   select maybe.Value;
+                where maybe.HasValue
+                select maybe.Value;
         }
 
         /// <summary>
-		/// Allows to do conversion of source if it's not null
-		/// </summary>
-		/// <returns>Converted object which returns action</returns>
-		public static Maybe<TR> Select<TS, TR>(this Maybe<TS> source, Func<TS, TR> function)
+        /// Allows to do conversion of source if it's not null
+        /// </summary>
+        /// <returns>Converted object which returns action</returns>
+        public static Maybe<TR> Select<TS, TR>(this Maybe<TS> source, Func<TS, TR> function)
         {
             return source.HasValue ? function(source.Value) : Maybe<TR>.Nothing;
         }
 
         /// <summary>
-		/// Allows to do conversion of source if its not null and catch any exceptions
-		/// </summary>
-		/// <returns>Tuple which contains Converted object and info about exception (if it throws)</returns>
-		public static Tuple<Maybe<TR>, Exception> TrySelect<TS, TR>(this Maybe<TS> source, Func<TS, TR> function)
+        /// Allows to do conversion of source if its not null and catch any exceptions
+        /// </summary>
+        /// <returns>Tuple which contains Converted object and info about exception (if it throws)</returns>
+        public static Tuple<Maybe<TR>, Exception> TrySelect<TS, TR>(this Maybe<TS> source, Func<TS, TR> function)
         {
             var result = Maybe<TR>.Nothing;
 
@@ -61,9 +61,9 @@ namespace Monad.MaybeMonad
         }
 
         /// <summary>
-		/// Handle exception with handler
-		/// </summary>
-		public static Maybe<TS> Catch<TS>(this Tuple<Maybe<TS>, Exception> source, Action<Exception> handler = null)
+        /// Handle exception with handler
+        /// </summary>
+        public static Maybe<TS> Catch<TS>(this Tuple<Maybe<TS>, Exception> source, Action<Exception> handler = null)
         {
             if (source.Item2 != null)
                 handler?.Invoke(source.Item2);

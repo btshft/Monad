@@ -45,12 +45,19 @@ namespace Monad.Tests
             Assert.IsFalse(m5.HasValue);
 
 
-            var list = new List<Maybe<int>> {12, Maybe<int>.Nothing, 43, 345, Maybe<int>.Nothing, 23, Maybe<int>.Nothing };
+            var list = new List<Maybe<int>>
+            {
+                12,
+                Maybe<int>.Nothing,
+                Maybe<int>.Nothing,
+                Maybe<int>.Nothing,
+                43,
+                345,
+                23
+            };
+
             var filtered = list.Select(item => item).Flatten();
             Assert.IsTrue(filtered.Count() == list.Count - 3);
-
-
-
         }
     }
 }

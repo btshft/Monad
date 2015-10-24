@@ -21,16 +21,16 @@ namespace Monad.MaybeMonad
         /// </exception>
         public override T Value
         {
-            get
-            {
-                throw new InvalidOperationException("MaybeLazy<" + nameof(T) + ">.Nothing has no value.");
-            }
+            get { throw new InvalidOperationException("MaybeLazy<" + nameof(T) + ">.Nothing has no value."); }
         }
 
         /// <summary>
         /// Nothing case has no value
         /// </summary>
-        public override bool HasValue { get { return false; } }
+        public override bool HasValue
+        {
+            get { return false; }
+        }
 
         /// <summary>
         /// Simple toString implementation
