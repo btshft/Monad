@@ -9,6 +9,12 @@ namespace Monad.MaybeMonad
     /// </summary>
     public abstract class Maybe<T> : IEnumerable<T>, IEquatable<Maybe<T>>, IEquatable<T>
     {
+
+        /// <summary>
+        /// Represents a Maybe monad without a value
+        /// </summary>
+        public readonly static Maybe<T> Nothing = new Nothing<T>();
+
         /// <summary>
         /// Monad value
         /// </summary>
