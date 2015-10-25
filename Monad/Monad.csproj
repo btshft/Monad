@@ -40,10 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MaybeMonad\MaybeExtensions.cs" />
+    <Compile Include="MaybeMonad\IMaybe.cs" />
     <Compile Include="MaybeMonad\Maybe.cs" />
-    <Compile Include="MaybeMonad\Nothing.cs" />
-    <Compile Include="MaybeMonad\Some.cs" />
+    <Compile Include="MaybeMonad\MaybeExtensions.cs" />
+    <Compile Include="MaybeMonad\Unit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

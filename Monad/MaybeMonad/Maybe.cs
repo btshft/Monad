@@ -1,84 +1,97 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Monad.MaybeMonad
 {
-    /// <summary>
-    /// Maybe monade main class
-    /// </summary>
-    public abstract class Maybe<T> : IEnumerable<T>, IEquatable<Maybe<T>>, IEquatable<T>
+    [Serializable] 
+    public struct Maybe<T> : 
+        IMaybe, IEnumerable<T>, 
+        IEquatable<Maybe<T>>, IEquatable<T>
     {
         /// <summary>
-        /// Represents a Maybe monad without a value
+        /// Value stored in maybe
         /// </summary>
-        public static readonly Maybe<T> Nothing = new Nothing<T>();
+        private readonly T _value;
 
         /// <summary>
-        /// Monad value
+        /// Closed c-tor
         /// </summary>
-        public abstract T Value { get; }
-
-        protected Maybe()
+        /// <param name="value">Value to convert</param>
+        private Maybe(T value)
         {
-        }
+            IsSome = (value != null);
+            _value = value;
+        } 
 
         /// <summary>
-        /// Does monad have value
+        /// Maybe(x) open ctor
         /// </summary>
-        public abstract bool HasValue { get; }
+        /// <param name="value">Value to convert</param>
+        public static Maybe<T> Some(T value) => 
+            new Maybe<T>(value); 
+
+        /// <summary>
+        /// Represent a None state
+        /// </summary>
+        public static readonly Maybe<T> None 
+            = new Maybe<T>();
+
+        /// <summary>
+        /// True if Maybe has some value
+        /// </summary>
+        public bool IsSome { get; }
+
+        /// <summary>
+        /// True if Maybe has no value
+        /// </summary>
+        public bool IsNone => !IsSome;
+
+        /// <summary>
+        /// Returns a Maybe value if it's not null otherwise throws InvalidOperationException
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Throws if value is null</exception>
+        public T Value
+        {
+            get
+            {
+                if (IsNone)
+                    throw new InvalidOperationException("Maybe is None");
+                return _value;
+            }
+        }
 
         /// <summary>
         /// Returns monad value or default value of parametric type
         /// </summary>
         /// <returns>If monad has value returns it otherwise returns default</returns>
-        public T GetValueOrDefault()
-        {
-            return HasValue ? Value : default(T);
-        }
+        public T GetValueOrDefault() =>
+            IsSome ? Value : default(T);
 
         /// <summary>
-        /// Returns monad value or another specified by user
+        /// Helper function. Returns input if it's not null. otherwise throws exception
         /// </summary>
-        /// <param name="another">The value to return in case of empty MaybeLazy</param>
-        /// <returns>If monad has value returns it otherwise returns another</returns>
-        public T GetValueOr(T another)
+        public static R ValueOrException<R>(R value, string where)
         {
-            return HasValue ? Value : another;
+            if (value == null)
+                throw new ArgumentNullException($"'{where}' result is null.  Not allowed.");
+            return value;
         }
 
-        /// <summary>
-        /// Returns monad value or result of function
-        /// </summary>
-        /// <param name="another">The function to get result in case of empty MaybeLazy</param>
-        /// <returns>If monad has value returns it otherwise returns another result</returns>
-        public T GetValueOr(Func<T> another)
-        {
-            return HasValue ? Value : another();
-        }
-
-        /// <summary>
-        /// Tries to get value from monad
-        /// </summary>
-        /// <param name="output">The varibale to store result. If monad has no value result will be default</param>
-        /// <returns>Returns true if monad has value otherwise returns false</returns>
-        public bool TryGetValue(out T output)
-        {
-            output = HasValue ? Value : default(T);
-            return HasValue;
-        }
+        #region Operators
 
         /// <summary>
         /// Conversion from any value to Maybe<T>
         /// </summary>
         /// <param name="value">Value to convert</param>
         /// <returns>If value is null returns Nothing othervise returns new MaybeLazy</returns>
-        public static implicit operator Maybe<T>(T value)
-        {
-            return value == null
-                ? Nothing<T>.Default
-                : Some<T>.Of(value);
-        }
+        public static implicit operator Maybe<T>(T value) =>
+            value == null
+                ? None
+                : Some(value);
 
         /// <summary>
         /// Compares two monads for inequality.
@@ -96,6 +109,106 @@ namespace Monad.MaybeMonad
         /// <returns>True if the monad's values are not equal otherwise returns false</returns>
         public static bool operator !=(Maybe<T> lhs, Maybe<T> rhs) => !lhs.Equals(rhs);
 
+        /// <summary>
+        /// Compares monad with value
+        /// </summary>
+        /// <param name="lhs">Left hand side monad</param>
+        /// <param name="rhs">Right hand side value</param>
+        /// <returns>True if the monad's value are equal to rhs otherwise returns false</returns>
+        public static bool operator ==(Maybe<T> lhs, T rhs) => lhs.Equals(rhs);
+
+        /// <summary>
+        /// Compares monad with value
+        /// </summary>
+        /// <param name="lhs">Left hand side monad</param>
+        /// <param name="rhs">Right hand side value </param>
+        /// <returns>True if the monad's value are not equal to rhs otherwise returns false</returns>
+        public static bool operator !=(Maybe<T> lhs, T rhs) => !lhs.Equals(rhs);
+
+        /// <summary>
+        /// Monad has value
+        /// </summary>
+        public static bool operator true(Maybe<T> value) =>
+            value.IsSome;
+
+        /// <summary>
+        /// Monad has no value
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool operator false(Maybe<T> value) =>
+            value.IsNone;
+
+        #endregion
+
+        #region Match
+
+        /// <summary>
+        /// Match the two states of the Maybe
+        /// </summary>
+        public R Match<R>(Func<T, R> some, Func<R> none) =>
+            IsSome
+                ? ValueOrException(some(Value), "Some")
+                : ValueOrException(none(), "None");
+
+        /// <summary>
+        /// Match the two states of the Maybe
+        /// </summary>
+        /// <param name="some">Some match</param>
+        /// <param name="none">None match</param>>
+        /// <returns>Unit</returns>
+        public Unit Match(Action<T> some, Action none)
+        {
+            if (IsSome)
+            {
+                some(Value);
+            }
+            else
+            {
+                none();
+            }
+            return Unit.Default;
+        }
+
+        /// <summary>
+        /// Invokes the someHandler if Maybe has value
+        /// happens.
+        /// </summary>
+        public Unit IfSome(Action<T> someHandler)
+        {
+            if (IsSome)
+            {
+                someHandler(_value);
+            }
+            return Unit.Default;
+        }
+
+        /// <summary>
+        /// Invokes the someHandler if Maybe has value
+        /// </summary>
+        public Unit IfSome(Func<T, Unit> someHandler)
+        {
+            if (IsSome)
+            {
+                someHandler(_value);
+            }
+            return Unit.Default;
+        }
+
+        /// <summary>
+        /// Invokes the someHandler if Maybe has no value
+        /// </summary>
+        public T IfNone(Func<T> none) =>
+            Match((value => value), none);
+
+        /// <summary>
+        /// Invokes the someHandler if Maybe has no value
+        /// </summary>
+        public T IfNone(T noneValue) =>
+            Match((value => value), () => noneValue);
+
+        #endregion
+
         #region IEnumerable<T> Members
 
         /// <summary>
@@ -104,7 +217,7 @@ namespace Monad.MaybeMonad
         /// <returns>An iterator that will yield value</returns>
         public IEnumerator<T> GetEnumerator()
         {
-            if (HasValue)
+            if (IsSome)
                 yield return Value;
         }
 
@@ -119,7 +232,7 @@ namespace Monad.MaybeMonad
 
         #endregion
 
-        #region IEquatalbe<T> Members
+        #region IEquatable Members
 
         /// <summary>
         /// Compares two monads for equality
@@ -128,13 +241,10 @@ namespace Monad.MaybeMonad
         /// <returns>True if equal</returns>
         public bool Equals(Maybe<T> other)
         {
-            if (this.HasValue != other.HasValue)
+            if (IsSome != other.IsSome)
                 return false;
 
-            if (!this.HasValue)
-                return true;
-
-            return EqualityComparer<T>.Default.Equals(this.Value, other.Value);
+            return !IsSome || EqualityComparer<T>.Default.Equals(Value, other.Value);
         }
 
         /// <summary>
@@ -143,7 +253,7 @@ namespace Monad.MaybeMonad
         /// <returns>True if equal</returns>
         public bool Equals(T other)
         {
-            if (!HasValue && other == null)
+            if (!IsSome && other == null)
                 return true;
             return EqualityComparer<T>.Default.Equals(Value, other);
         }
@@ -155,12 +265,29 @@ namespace Monad.MaybeMonad
         /// <summary>
         /// Compares to objects for equality
         /// </summary>
-        /// <param name="other">The object to compare to.</param>
-        /// <returns>True if other object is MaybeLazy and both values are equal</returns>
-        public override bool Equals(object other)
+        public override bool Equals(object obj)
         {
-            var casted = other as Maybe<T>;
-            return (casted != null && Equals(casted));
+            if (obj == null)
+            {
+                return false;
+            }
+
+            // Compare to another Maybe
+            if (obj is Maybe<T>)
+            {
+                var rhs = (Maybe<T>)obj;
+                return IsSome && rhs.IsSome
+                    ? Value.Equals(rhs.Value)
+                    : !IsSome && !rhs.IsSome;
+            }
+
+            // Compare to Value
+            if (obj is T)
+            {
+                var rhs = (T)obj;
+                return IsSome && Value.Equals(rhs);
+            }
+            return false;
         }
 
         /// <summary>
@@ -169,10 +296,11 @@ namespace Monad.MaybeMonad
         /// <returns>Hash code of the value</returns>
         public override int GetHashCode()
         {
-            return HasValue ? EqualityComparer<T>.Default.GetHashCode() : 0;
+            return IsSome ? EqualityComparer<T>.Default.GetHashCode() : 0;
         }
 
         #endregion
+
     }
 
     /// <summary>
@@ -186,18 +314,18 @@ namespace Monad.MaybeMonad
         public static Maybe<T> Create<T>(T value)
         {
             return value == null
-                ? MaybeMonad.Nothing<T>.Default
-                : Some<T>.Of(value);
+                ? Maybe<T>.None
+                : Maybe<T>.Some(value);
         }
 
         /// <summary>
         /// Creates Maybe from nullable
         /// </summary>
-        public static Maybe<T> Create<T>(T? value) where T : struct
+        public static Maybe<T> Create<T>(T? nullable) where T : struct
         {
-            return !value.HasValue
-                ? MaybeMonad.Nothing<T>.Default
-                : Some<T>.Of(value.Value);
+            return !nullable.HasValue
+                ? Maybe<T>.None
+                : Maybe<T>.Some(nullable.Value);
         }
     }
 }

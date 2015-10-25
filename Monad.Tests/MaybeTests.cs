@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Monad.MaybeMonad;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
@@ -33,31 +34,19 @@ namespace Monad.Tests
             var m3 = ((int?) null).ToMaybe();
 
             var m4 = m1
-                .Select(m => m2.Value)
-                .Select(m => m3.GetValueOrDefault());
+                .FlatMap(m => m2)
+                .FlatMap(m => m3);
 
-            var m5 = m2
-                .Select(m => m1)
-                .Where(m => m.Value > 50)
-                .Select(m => m.GetValueOrDefault());
+            var m5 = m2.Bind((i => Maybe<int>.Some(i*2)));
+            m3 = 32;
 
-            Assert.IsFalse(m4.HasValue);
-            Assert.IsFalse(m5.HasValue);
+            var m6 = m3.Filter(val => val > 40);
+            var m7 = m6.IfNone(() => 30);
 
+            Assert.IsTrue(m4.IsNone);
+            Assert.IsTrue(m6.IsNone);
+            Assert.IsTrue(m7 == 30);
 
-            var list = new List<Maybe<int>>
-            {
-                12,
-                Maybe<int>.Nothing,
-                Maybe<int>.Nothing,
-                Maybe<int>.Nothing,
-                43,
-                345,
-                23
-            };
-
-            var filtered = list.Select(item => item).Flatten();
-            Assert.IsTrue(filtered.Count() == list.Count - 3);
         }
     }
 }

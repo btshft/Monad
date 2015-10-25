@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,8 +15,8 @@ namespace Monad.MaybeMonad
         public static Maybe<T> ToMaybe<T>(this T self)
         {
             return self == null
-                ? Nothing<T>.Default
-                : Some<T>.Of(self);
+                ? Maybe<T>.None
+                : Maybe<T>.Some(self);
         }
 
         /// <summary>
@@ -24,62 +25,79 @@ namespace Monad.MaybeMonad
         /// </summary>
         public static IEnumerable<T> Flatten<T>(this IEnumerable<Maybe<T>> source)
         {
-            return from maybe in source
-                where maybe.HasValue
-                select maybe.Value;
+            return source
+                .Where(maybe => maybe.IsSome)
+                .Select(maybe => maybe.Value);
         }
 
         /// <summary>
-        /// Allows to do conversion of source if it's not null
+        /// Converts maybe to nullable if it has struct type
         /// </summary>
-        /// <returns>Converted object which returns action</returns>
-        public static Maybe<TR> Select<TS, TR>(this Maybe<TS> source, Func<TS, TR> function)
-        {
-            return source.HasValue ? function(source.Value) : Maybe<TR>.Nothing;
-        }
+        public static T? ToNullable<T>(this Maybe<T> self) where T : struct =>
+            self.IsNone
+                ? (T?) null
+                : self.Value;
+
 
         /// <summary>
-        /// Allows to do conversion of source if its not null and catch any exceptions
+        /// Map Maybe T to Maybe R
         /// </summary>
-        /// <returns>Tuple which contains Converted object and info about exception (if it throws)</returns>
-        public static Tuple<Maybe<TR>, Exception> TrySelect<TS, TR>(this Maybe<TS> source, Func<TS, TR> function)
-        {
-            var result = Maybe<TR>.Nothing;
-
-            if (!source.HasValue)
-                return new Tuple<Maybe<TR>, Exception>(result, null);
-
-            try
-            {
-                result = function(source.Value);
-                return new Tuple<Maybe<TR>, Exception>(result, null);
-            }
-            catch (Exception ex)
-            {
-                return new Tuple<Maybe<TR>, Exception>(result, ex);
-            }
-        }
+        /// <returns></returns>
+        public static Maybe<R> Map<T, R>(this Maybe<T> self, Func<T, R> mapper) =>
+            self.IsSome
+                ? Maybe<R>.Some(mapper(self.Value))
+                : Maybe<R>.None;
 
         /// <summary>
-        /// Handle exception with handler
+        /// FlatMap Maybe T to Maybe R
         /// </summary>
-        public static Maybe<TS> Catch<TS>(this Tuple<Maybe<TS>, Exception> source, Action<Exception> handler = null)
-        {
-            if (source.Item2 != null)
-                handler?.Invoke(source.Item2);
-
-            return source.Item1;
-        }
+        /// <returns></returns>
+        public static R FlatMap<T, R>(this Maybe<T> self, Func<T, R> mapper) =>
+            self.IsSome
+                ? Maybe<R>.Some(mapper(self.Value)).Value
+                : default(R);
 
         /// <summary>
-        /// Retruns the source if both condition is true and monade has value, or null otherwise
+        /// Map Maybe T to Maybe R
         /// </summary>
-        public static Maybe<TS> Where<TS>(this Maybe<TS> source, Func<TS, bool> condition)
-        {
-            if (source.HasValue && condition(source.Value))
-                return source;
+        public static Maybe<R> Map<T, R>(this Maybe<T> self, Func<T, R> some, Func<R> none) =>
+            self.IsSome
+                ? Maybe<R>.Some(some(self.Value))
+                : none();
 
-            return Maybe<TS>.Nothing;
-        }
+        /// <summary>
+        /// Filter maybe values
+        /// </summary>
+        public static Maybe<T> Filter<T>(this Maybe<T> self, Func<T, bool> pred) =>
+            self.IsSome
+                ? pred(self.Value)
+                    ? self
+                    : Maybe<T>.None
+                : self;
+
+        /// <summary>
+        /// Bind function to Maybe
+        /// </summary>
+        public static Maybe<R> Bind<T, R>(this Maybe<T> self, Func<T, Maybe<R>> binder) =>
+            self.IsSome
+                ? binder(self.Value)
+                : Maybe<R>.None;
+
+        /// <summary>
+        /// Use map instead
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static Maybe<U> Select<T, U>(this Maybe<T> self, Func<T, U> map) =>
+            self.Map(map);
+
+        /// <summary>
+        /// Use filter instead
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static Maybe<T> Where<T>(this Maybe<T> self, Func<T, bool> pred) =>
+            self.Filter(pred)
+                ? self
+                : Maybe<T>.None;
+
     }
 }
