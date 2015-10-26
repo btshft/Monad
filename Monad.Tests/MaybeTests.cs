@@ -17,10 +17,10 @@ namespace Monad.Tests
         [Test]
         public void TestEquals()
         {
-            var m1 = Maybe.Create(12);
-            var m2 = Maybe.Create(12);
-            var m3 = Maybe.Create((int?) null);
-            var m4 = Maybe.Create((int?) null);
+            var m1 = Maybe.MaybeOf(12);
+            var m2 = Maybe.MaybeOf(12);
+            var m3 = Maybe.MaybeOf((int?) null);
+            var m4 = Maybe.MaybeOf((int?) null);
 
             Assert.IsTrue(m1 == m2);
             Assert.IsTrue(m3 == m4);
