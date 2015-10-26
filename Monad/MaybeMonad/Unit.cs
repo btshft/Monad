@@ -20,12 +20,14 @@ namespace Monad.MaybeMonad
         /// <summary>
         /// Provide an alternative value to unit
         /// </summary>
-        public T Return<T>(T anything) => anything;
+        public T Return<T>(T anything) => 
+            anything;
 
         /// <summary>
         /// Provide an alternative value to unit
         /// </summary>
-        public T Return<T>(Func<T> anything) => anything();
+        public T Return<T>(Func<T> anything) => 
+            anything();
 
         #region Operators
 

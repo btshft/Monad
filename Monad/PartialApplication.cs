@@ -29,13 +29,11 @@ namespace Monad
         public static Func<T2, T3, T4, TR> papply<T1, T2, T3, T4, TR>(Func<T1, T2, T3, T4, TR> f, T1 a) =>
             (b, c, d) => f(a, b, c, d);
 
-        public static Func<T5, TR> papply<T1, T2, T3, T4, T5, TR>(Func<T1, T2, T3, T4, T5, TR> f, T1 a, T2 b, T3 c, T4 d)
-            =>
-                (e) => f(a, b, c, d, e);
+        public static Func<T5, TR> papply<T1, T2, T3, T4, T5, TR>(Func<T1, T2, T3, T4, T5, TR> f, T1 a, T2 b, T3 c, T4 d) => 
+            (e) => f(a, b, c, d, e);
 
-        public static Func<T4, T5, TR> papply<T1, T2, T3, T4, T5, TR>(Func<T1, T2, T3, T4, T5, TR> f, T1 a, T2 b, T3 c)
-            =>
-                (d, e) => f(a, b, c, d, e);
+        public static Func<T4, T5, TR> papply<T1, T2, T3, T4, T5, TR>(Func<T1, T2, T3, T4, T5, TR> f, T1 a, T2 b, T3 c) => 
+            (d, e) => f(a, b, c, d, e);
 
         public static Func<T3, T4, T5, TR> papply<T1, T2, T3, T4, T5, TR>(Func<T1, T2, T3, T4, T5, TR> f, T1 a, T2 b) =>
             (c, d, e) => f(a, b, c, d, e);
