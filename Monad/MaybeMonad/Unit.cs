@@ -14,7 +14,7 @@ namespace Monad.MaybeMonad
         /// <summary>
         /// Default unit value
         /// </summary>
-        public static readonly Unit Default 
+        public static readonly Unit Default
             = new Unit();
 
         /// <summary>
@@ -26,6 +26,16 @@ namespace Monad.MaybeMonad
         /// Provide an alternative value to unit
         /// </summary>
         public T Return<T>(Func<T> anything) => anything();
+
+        #region Operators
+
+        public static bool operator ==(Unit lhs, Unit rhs) =>
+            true;
+
+        public static bool operator !=(Unit lhs, Unit rhs) =>
+            false;
+
+        #endregion
 
         #region Overrides 
 
@@ -41,13 +51,6 @@ namespace Monad.MaybeMonad
         public bool Equals(Unit other) =>
             true;
 
-        public static bool operator ==(Unit lhs, Unit rhs) =>
-            true;
-
-        public static bool operator !=(Unit lhs, Unit rhs) =>
-            false;
-
         #endregion
-
     }
 }

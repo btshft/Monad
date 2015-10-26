@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static Monad.Prelude;
 
 namespace Monad.MaybeMonad
 {
-    [Serializable] 
-    public struct Maybe<T> : 
-        IMaybe, IEnumerable<T>, 
+    [Serializable]
+    public struct Maybe<T> :
+        IMaybe, IEnumerable<T>,
         IEquatable<Maybe<T>>, IEquatable<T>
     {
         /// <summary>
@@ -26,19 +23,19 @@ namespace Monad.MaybeMonad
         {
             IsSome = (value != null);
             _value = value;
-        } 
+        }
 
         /// <summary>
         /// Maybe(x) open ctor
         /// </summary>
         /// <param name="value">Value to convert</param>
-        public static Maybe<T> Some(T value) => 
-            new Maybe<T>(value); 
+        public static Maybe<T> Some(T value) =>
+            new Maybe<T>(value);
 
         /// <summary>
         /// Represent a None state
         /// </summary>
-        public static readonly Maybe<T> None 
+        public static readonly Maybe<T> None
             = new Maybe<T>();
 
         /// <summary>
@@ -269,7 +266,7 @@ namespace Monad.MaybeMonad
             // Compare to another Maybe
             if (obj is Maybe<T>)
             {
-                var rhs = (Maybe<T>)obj;
+                var rhs = (Maybe<T>) obj;
                 return IsSome && rhs.IsSome
                     ? Value.Equals(rhs.Value)
                     : !IsSome && !rhs.IsSome;
@@ -278,7 +275,7 @@ namespace Monad.MaybeMonad
             // Compare to Value
             if (obj is T)
             {
-                var rhs = (T)obj;
+                var rhs = (T) obj;
                 return IsSome && Value.Equals(rhs);
             }
             return false;
@@ -302,7 +299,6 @@ namespace Monad.MaybeMonad
                 : "[Nothing]";
 
         #endregion
-
     }
 
     /// <summary>
@@ -313,7 +309,7 @@ namespace Monad.MaybeMonad
         /// <summary>
         /// Creates MaybeLazy from value
         /// </summary>
-        public static Maybe<T> MaybeOf<T>(T value)=>
+        public static Maybe<T> MaybeOf<T>(T value) =>
             value == null
                 ? Maybe<T>.None
                 : Maybe<T>.Some(value);
@@ -321,10 +317,9 @@ namespace Monad.MaybeMonad
         /// <summary>
         /// Creates Maybe from nullable
         /// </summary>
-        public static Maybe<T> MaybeOf<T>(T? nullable) where T : struct => 
+        public static Maybe<T> MaybeOf<T>(T? nullable) where T : struct =>
             nullable.HasValue
                 ? Maybe<T>.Some(nullable.Value)
                 : Maybe<T>.None;
-
     }
 }

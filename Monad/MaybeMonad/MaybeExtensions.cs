@@ -14,23 +14,17 @@ namespace Monad.MaybeMonad
         /// <summary>
         /// Converts value to an Maybe<T>.
         /// </summary>
-        public static Maybe<T> ToMaybe<T>(this T self)
-        {
-            return self == null
+        public static Maybe<T> ToMaybe<T>(this T self) =>
+            self == null
                 ? Maybe<T>.None
                 : Maybe<T>.Some(self);
-        }
 
         /// <summary>
         /// Flattens a sequence of Maybe into one sequence of T
         /// elements where the value of the monad was MaybeOf
         /// </summary>
-        public static IEnumerable<T> Flatten<T>(this IEnumerable<Maybe<T>> self)
-        {
-            return self
-                .Where(maybe => maybe.IsSome)
-                .Select(maybe => maybe.Value);
-        }
+        public static IEnumerable<T> Flatten<T>(this IEnumerable<Maybe<T>> self) =>
+            self.Where(maybe => maybe.IsSome).Select(maybe => maybe.Value);
 
         /// <summary>
         /// Converts maybe to nullable if it has struct type
@@ -145,6 +139,5 @@ namespace Monad.MaybeMonad
             self.Filter(predicate)
                 ? self
                 : Maybe<T>.None;
-
     }
 }
