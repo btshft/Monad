@@ -20,5 +20,12 @@ namespace Monad
         {
             throw ex;
         }
+
+	/// <summary>
+        /// Ignore any value, return Unit
+        /// </summary>
+        public static Unit ignore<T>(T any) =>
+            Unit.Default;
+
     }
 }
