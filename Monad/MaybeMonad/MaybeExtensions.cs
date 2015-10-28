@@ -21,7 +21,7 @@ namespace Monad.MaybeMonad
 
         /// <summary>
         /// Flattens a sequence of Maybe into one sequence of T
-        /// elements where the value of the monad was MaybeOf
+        /// elements where the value of the monad was Of
         /// </summary>
         public static IEnumerable<T> Flatten<T>(this IEnumerable<Maybe<T>> self) =>
             self.Where(maybe => maybe.IsSome).Select(maybe => maybe.Value);

@@ -44,6 +44,8 @@
     <Compile Include="MaybeMonad\IMaybe.cs" />
     <Compile Include="MaybeMonad\Maybe.cs" />
     <Compile Include="MaybeMonad\MaybeExtensions.cs" />
+    <Compile Include="MaybeMonad\Some.cs" />
+    <Compile Include="MaybeMonad\SomeExtensions.cs" />
     <Compile Include="MaybeMonad\Unit.cs" />
     <Compile Include="PartialApplication.cs" />
     <Compile Include="Prelude.cs" />
