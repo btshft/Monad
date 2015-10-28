@@ -67,7 +67,7 @@ namespace Monad.MaybeMonad
         /// <summary>
         /// Helper function. Returns input if it's not null. otherwise throws exception
         /// </summary>
-        public static R ValueOrException<R>(R value, string where) =>
+        private R ReturnIfInitialised<R>(R value, string where) =>
             value == null
                 ? Raise<R>(new ArgumentNullException($"'{where}' result is null.  Not allowed."))
                 : value;
@@ -139,13 +139,13 @@ namespace Monad.MaybeMonad
         /// </summary>
         public R Match<R>(Func<T, R> some, Func<R> none) =>
             IsSome
-                ? ValueOrException(some(Value), "MaybeOf")
-                : ValueOrException(none(), "None");
+                ? ReturnIfInitialised(some(Value), "Of")
+                : ReturnIfInitialised(none(), "None");
 
         /// <summary>
         /// Match the two states of the Maybe
         /// </summary>
-        /// <param name="some">MaybeOf match</param>
+        /// <param name="some">Of match</param>
         /// <param name="none">None match</param>>
         /// <returns>Unit</returns>
         public Unit Match(Action<T> some, Action none)
@@ -289,12 +289,12 @@ namespace Monad.MaybeMonad
             IsSome ? EqualityComparer<T>.Default.GetHashCode() : 0;
 
         /// <summary>
-        /// MaybeOf(null) or MaybeOf(x) or [Nothing]
+        /// Of(null) or Of(x) or [Nothing]
         /// </summary>
         public override string ToString() =>
             IsSome
                 ? Value == null
-                    ? "MaybeOf(null)"
+                    ? "Of(null)"
                     : $"Some({Value})"
                 : "[Nothing]";
 
@@ -307,9 +307,9 @@ namespace Monad.MaybeMonad
     public static class Maybe
     {
         /// <summary>
-        /// Creates MaybeLazy from value
+        /// Creates Maybe from value
         /// </summary>
-        public static Maybe<T> MaybeOf<T>(T value) =>
+        public static Maybe<T> Of<T>(T value) =>
             value == null
                 ? Maybe<T>.None
                 : Maybe<T>.Some(value);
@@ -317,7 +317,7 @@ namespace Monad.MaybeMonad
         /// <summary>
         /// Creates Maybe from nullable
         /// </summary>
-        public static Maybe<T> MaybeOf<T>(T? nullable) where T : struct =>
+        public static Maybe<T> Of<T>(T? nullable) where T : struct =>
             nullable.HasValue
                 ? Maybe<T>.Some(nullable.Value)
                 : Maybe<T>.None;
