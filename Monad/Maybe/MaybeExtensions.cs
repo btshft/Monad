@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Monad.PartialApplication;
-using static Monad.Curry;
 
-namespace Monad.MaybeMonad
+namespace Monades.Maybe
 {
     public static class MaybeExtensions
     {
@@ -55,7 +51,7 @@ namespace Monad.MaybeMonad
         /// </summary>
         public static Maybe<Func<T2, R>> Apply<T1, T2, R>(this Maybe<Func<T1, T2, R>> self, Maybe<T1> arg) =>
             self.IsSome && arg.IsSome
-                ? Maybe<Func<T2, R>>.Some(papply(self.Value, arg.Value))
+                ? Maybe<Func<T2, R>>.Some(PartialApplication.papply(self.Value, arg.Value))
                 : Maybe<Func<T2, R>>.None;
 
 
@@ -73,7 +69,7 @@ namespace Monad.MaybeMonad
         /// by currying
         /// </summary>
         public static Maybe<Func<T2, R>> Map<T1, T2, R>(this Maybe<T1> self, Func<T1, T2, R> mapper) =>
-            self.Map(curry(mapper));
+            self.Map(Curry.curry(mapper));
 
         /// <summary>
         /// FlatMap Maybe T to Maybe R

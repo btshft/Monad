@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Monad
+namespace Monades
 {
     /// <summary>
     /// Fixing a number of arguments to a function, producing another function of smaller arity.

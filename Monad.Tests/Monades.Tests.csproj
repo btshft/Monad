@@ -74,9 +74,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Monad\Monad.csproj">
+    <ProjectReference Include="..\Monad\Monades.csproj">
       <Project>{D633E08D-3995-4363-B6CD-AC0F132566A2}</Project>
-      <Name>Monad</Name>
+      <Name>Monades</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

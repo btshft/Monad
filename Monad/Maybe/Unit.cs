@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Monad.MaybeMonad
+namespace Monades.Maybe
 {
     /// <summary>
     /// Unit type (like void but can return anything)

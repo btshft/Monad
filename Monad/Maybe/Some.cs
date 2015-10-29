@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Monad.Prelude;
+using static Monades.Prelude;
 
-namespace Monad.MaybeMonad
+namespace Monades.Maybe
 {
     /// <summary>
     /// Represent a Some value. It cant be null

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using static Monad.Prelude;
+using static Monades.Prelude;
 
-namespace Monad.MaybeMonad
+namespace Monades.Maybe
 {
     [Serializable]
     public struct Maybe<T> :

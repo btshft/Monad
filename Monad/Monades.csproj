@@ -7,8 +7,8 @@
     <ProjectGuid>{D633E08D-3995-4363-B6CD-AC0F132566A2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Monad</RootNamespace>
-    <AssemblyName>Monad</AssemblyName>
+    <RootNamespace>Monades</RootNamespace>
+    <AssemblyName>Monades</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -41,16 +41,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Curry.cs" />
-    <Compile Include="MaybeMonad\IMaybe.cs" />
-    <Compile Include="MaybeMonad\Maybe.cs" />
-    <Compile Include="MaybeMonad\MaybeExtensions.cs" />
-    <Compile Include="MaybeMonad\Some.cs" />
-    <Compile Include="MaybeMonad\SomeExtensions.cs" />
-    <Compile Include="MaybeMonad\Unit.cs" />
+    <Compile Include="Exceptional\Exceptional.cs" />
+    <Compile Include="Exceptional\IExceptional.cs" />
+    <Compile Include="Maybe\IMaybe.cs" />
+    <Compile Include="Maybe\Maybe.cs" />
+    <Compile Include="Maybe\MaybeExtensions.cs" />
+    <Compile Include="Maybe\Some.cs" />
+    <Compile Include="Maybe\SomeExtensions.cs" />
+    <Compile Include="Maybe\Unit.cs" />
     <Compile Include="PartialApplication.cs" />
     <Compile Include="Prelude.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Monad.MaybeMonad;
+using Monades.Maybe;
 
-namespace Monad
+namespace Monades
 {
     public static class Prelude
     {
@@ -22,11 +18,10 @@ namespace Monad
             throw ex;
         }
 
-	/// <summary>
+        /// <summary>
         /// Ignore any value, return Unit
         /// </summary>
-        public static Unit ignore<T>(T any) =>
-            Unit.Default;
+        public static Unit Ignore<T>(T any) => Unit.Default;
 
     }
 }

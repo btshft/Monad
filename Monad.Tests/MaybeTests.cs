@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using Monad.MaybeMonad;
+﻿using Monades.Maybe;
 using NUnit.Framework;
-using Ploeh.AutoFixture;
 
 namespace Monad.Tests
 {
