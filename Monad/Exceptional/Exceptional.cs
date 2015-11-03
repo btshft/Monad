@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Monades.Maybe;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,6 +38,34 @@ namespace Monades.Exceptional
         {
             Exception = e;
             Value = default(T);
+        }
+
+        public Unit IfSucc(Action<T> handler)
+        {
+            if (!IsFaulted)
+                handler(Value);
+            return Unit.Default;
+        }
+
+        public T IfSucc(Func<T> handler)
+        {
+            if (!IsFaulted)
+                return handler();
+            return default(T);
+        }
+
+        public T IfFail(T defaultValue)
+        {
+            if (IsFaulted)
+                return defaultValue;
+            return Value;
+        }
+
+        public T IfFail(Func<T> defaultAction)
+        {
+            if (IsFaulted)
+                defaultAction();
+            return Value;
         }
 
     }

@@ -23,6 +23,19 @@ namespace Monades.Maybe
             self.Where(maybe => maybe.IsSome).Select(maybe => maybe.Value);
 
         /// <summary>
+        /// Flatten nested Maybe
+        /// </summary>
+        public static Maybe<T> Flatten<T>(this Maybe<Maybe<T>> self) =>
+            self.Where(maybe => maybe.IsSome).Select(maybe => maybe.Value);
+
+        /// <summary>
+        /// Flatten nested Maybe
+        /// </summary>
+        public static Maybe<T> Flatten<T>(this Maybe<Maybe<Maybe<T>>> self) =>
+            self.Where(maybe => maybe.IsSome).Select(maybe => maybe.Value)
+            .Where(maybe => maybe.IsSome).Select(maybe => maybe.Value);
+
+        /// <summary>
         /// Converts maybe to nullable if it has struct type
         /// </summary>
         public static T? ToNullable<T>(this Maybe<T> self) where T : struct =>

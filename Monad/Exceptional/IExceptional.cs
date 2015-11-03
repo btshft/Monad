@@ -13,3 +13,4 @@ namespace Monades.Exceptional
         T Value             { get; }
     }
 }
+
